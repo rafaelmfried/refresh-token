@@ -1,0 +1,20 @@
+import { AuthenticateUserUseCase } from "./AuthenticateUserUseCase";
+import { Request, Response } from 'express';
+
+class AuthenticateUserController {
+
+  async handle(request: Request, response: Response) {
+    const { username, password } = request.body;
+
+    const authenticateUserUseCase = new AuthenticateUserUseCase();
+
+    const token = await authenticateUserUseCase.execute({
+      username,
+      password,
+    });
+
+    return response.json(token);
+  }
+}
+
+export { AuthenticateUserController };
