@@ -2,6 +2,7 @@ import { compare } from 'bcryptjs';
 import { client } from '../../prisma/client';
 import { sign } from 'jsonwebtoken';
 import dotenv from 'dotenv';
+import { GenerateRefreshToken } from '../../provider/GenerateRefreshToken';
 
 dotenv.config();
 
@@ -33,7 +34,13 @@ class AuthenticateUserUseCase {
       subject: userAlreadyExists.id,
       expiresIn: '20s'
     });
-    return { token };
+
+    const generateRefreshToken = new GenerateRefreshToken();
+    const refreshToken = await generateRefreshToken.execute(
+      userAlreadyExists.id
+    );
+
+    return { token, refreshToken };
   }
 }
 
